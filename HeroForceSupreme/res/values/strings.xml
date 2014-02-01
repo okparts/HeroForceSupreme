@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General Strings -->
+    <string name="app_name">Hero Force Supreme</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- Image Descriptions -->
+    <string name="start_btn_desc">Start Button Image</string>
+    <string name="main_title_desc">Main Title Image</string>
+    <string name="hero_btn_desc">Hero Button Image</string>
+    <string name="villain_btn_desc">Villain Button Image</string>
+    <string name="name_btn_desc">Name Button Image</string>
+    
+    <!-- Game Build Strings -->
+    <string name="player_name_hint">Enter Your Manager\'s Name</string>
+    
+    <!-- Error Messages -->
+    <string name="manager_name_error_blank">Manager\'s Name cannot be blank!</string>
+
+</resources>

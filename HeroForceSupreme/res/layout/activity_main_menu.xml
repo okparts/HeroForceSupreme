@@ -1,0 +1,142 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/hsf_menu_bg"
+    android:orientation="vertical"
+    tools:context=".MainMenuActivity" >
+    
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/main_title_desc"
+        android:src="@drawable/hsf_main_title" />
+    
+   	<ViewFlipper 
+		android:id="@+id/mainMenu"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+	    
+	    <!-- Start Button - INDEX 0 -->
+	    <LinearLayout
+	        android:id="@+id/startGameBtn"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:gravity="center_horizontal"
+	        android:paddingTop="30dp" >
+			
+	        <ImageView
+	            android:id="@+id/startBtn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:clickable="true"
+	            android:contentDescription="@string/start_btn_desc"
+	            android:focusable="true"
+	            android:onClick="startGame"
+	            android:src="@drawable/start_btn" />
+	        
+	    </LinearLayout>
+	    
+	    <!-- Choose Hero Or Villain - INDEX 1 -->
+	    <LinearLayout
+	        android:id="@+id/chooseSide"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:gravity="center_horizontal"
+	        android:paddingTop="30dp" >
+	        
+	        <ImageView
+	            android:id="@+id/heroBtn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	        	android:layout_gravity="center_horizontal"
+	            android:layout_weight="1"
+	            android:clickable="true"
+	            android:contentDescription="@string/hero_btn_desc"
+	            android:focusable="true"
+	            android:onClick="setHero"
+	            android:src="@drawable/hero_btn" />
+	        
+	        <ImageView
+	            android:id="@+id/villainBtn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	        	android:layout_gravity="center_horizontal"
+	            android:layout_weight="1"
+	            android:clickable="true"
+	            android:contentDescription="@string/villain_btn_desc"
+	            android:focusable="true"
+	            android:onClick="setVillain"
+	            android:src="@drawable/villains_btn" />
+	        
+	    </LinearLayout>
+	    
+	    <!-- Enter Player Name - INDEX 2 -->
+	    <LinearLayout
+	        android:id="@+id/defaultCharacterName"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical"
+	        android:paddingTop="15dp"
+	        android:paddingLeft="100dp"
+	        android:paddingRight="100dp" >
+	        
+	        <EditText 
+	            android:id="@+id/enterName"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center"
+	            android:inputType="textPersonName"
+	            android:hint="@string/player_name_hint"
+	            android:background="#ffffff" />
+	        
+	        <ImageView
+	            android:id="@+id/nameBtn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	        	android:layout_gravity="center_horizontal"
+	            android:clickable="true"
+	            android:contentDescription="@string/name_btn_desc"
+	            android:focusable="true"
+	            android:onClick="buildGame"
+	            android:src="@drawable/name_btn"
+	            android:layout_marginTop="20dp" />
+	        
+	    </LinearLayout>
+	    
+	    <!-- Build Game Progress - INDEX 3 -->
+	    <LinearLayout
+	        android:id="@+id/buildGame"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical"
+	        android:paddingTop="15dp"
+	        android:paddingLeft="100dp"
+	        android:paddingRight="100dp" >
+	        
+	        <ProgressBar
+	            android:id="@+id/progressBar"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            style="@android:style/Widget.ProgressBar.Horizontal"
+	            android:max="100"
+	            android:progress="0" />
+	        
+	        <ImageView
+	            android:id="@+id/beginGameBtn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	        	android:layout_gravity="center_horizontal"
+	            android:clickable="true"
+	            android:contentDescription="@string/start_btn_desc"
+	            android:focusable="true"
+	            android:onClick="beginGame"
+	            android:src="@drawable/start_btn"
+	            android:layout_marginTop="20dp" />
+	        
+	    </LinearLayout>
+	    
+	</ViewFlipper>
+</LinearLayout>
