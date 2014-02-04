@@ -1,11 +1,16 @@
 package com.hfs.database;
 
+import java.util.Random;
+import java.util.UUID;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.hfs.constants.GameVars;
+import com.hfs.utils.NameGen;
 
 public class DBHelper extends SQLiteOpenHelper {
 	
@@ -26,22 +31,26 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	private static final String CREATE_TABLE_SUPERS = "CREATE TABLE IF NOT EXISTS " + GameVars.TABLE_SUPERS + "("
 			+ GameVars.COLUMN_ID + " INTEGER PRIMARY KEY,"
-			+ GameVars.COLUMN_SUPER_ID + " INTEGER,"
+			+ GameVars.COLUMN_SUPER_ID + " TEXT,"
 			+ GameVars.COLUMN_SUPER_NAME + " TEXT,"
-			+ GameVars.COLUMN_ABILITY_FLY + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_SPEED + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_XRAY + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_LASER + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_STRENGTH + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_ICE + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_FIRE + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_EARTH + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_AIR + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_TECH + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_INVINCIBLE + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_INSECT + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_ANIMAL + " INTEGER,"
-			+ GameVars.COLUMN_ABILITY_INTELLIGENCE + " INTEGER"
+			+ GameVars.COLUMN_SUPER_LEVEL + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_SUPER_PRICE + " INTEGER,"
+			+ GameVars.COLUMN_SUPER_TYPE + " INTEGER,"
+			+ GameVars.COLUMN_SUPER_WEAKNESS + " INTEGER,"
+			+ GameVars.COLUMN_ABILITY_FLY + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_SPEED + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_XRAY + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_LASER + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_STRENGTH + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_ICE + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_FIRE + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_EARTH + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_AIR + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_TECH + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_INVINCIBLE + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_INSECT + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_ANIMAL + " INTEGER DEFAULT 0,"
+			+ GameVars.COLUMN_ABILITY_INTELLIGENCE + " INTEGER DEFAULT 0"
 			+ ");";
 	
 	// constructor
@@ -86,5 +95,89 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 		}
 		return check;
+	}
+	
+	/*
+	 * build a new manager table
+	 * used for GameVars.TABLE_MANAGER table
+	 */
+	public long newManager(String name, int type) {
+		// database initializations
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		
+		// setup content to build manager table
+		cv.put(GameVars.COLUMN_MANAGER_NAME, name);
+		cv.put(GameVars.COLUMN_GAME_TYPE, type);
+		cv.put(GameVars.COLUMN_MONEY, 1000);
+		
+		// write manager table
+		long id = db.insert(GameVars.TABLE_MANAGER, null, cv);
+		
+		// return table row id
+		return id;
+	}
+	
+	public long addSuper(NameGen ng, int type, int superLevel) {
+		// database initializations
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		Random random = new Random();
+		
+		// super name generation
+		String superName = ng.generateName(type);
+		
+		// super id hash generation
+		String superID = UUID.randomUUID().toString();
+		
+		// random weakness generator
+		int weakness = (random.nextInt(GameVars.NUMBER_OF_WEAKNESSES)) + 1;
+		
+		// setup content to add a new super row
+		cv.put(GameVars.COLUMN_SUPER_NAME, superName);
+		cv.put(GameVars.COLUMN_SUPER_ID, superID);
+		cv.put(GameVars.COLUMN_SUPER_WEAKNESS, weakness);
+		
+		// random ability generator - based on super level
+		// one extra ability for every 5 levels
+		// 0-4 - 1 ability, 5-9 - 2 abilities, so on ...
+		int randomIndex; 
+		String[] randomAbilities = new String[superLevel];
+		for (int i = 0; i <= superLevel; i++) {
+			if (i > 0) {
+				randomIndex = random.nextInt(GameVars.ABILITIES.length);
+				randomAbilities[i] = GameVars.ABILITIES[randomIndex];
+				// if the random ability is a duplicate, then regenerate
+				while (checkDuplicates(randomAbilities, i)) {
+					randomIndex = random.nextInt(GameVars.ABILITIES.length);
+					randomAbilities[i] = GameVars.ABILITIES[randomIndex];
+				}
+			} else {
+				randomIndex = random.nextInt(GameVars.ABILITIES.length);
+				randomAbilities[i] = GameVars.ABILITIES[randomIndex];
+			}
+		}
+		
+		for (String ability: randomAbilities) {
+			cv.put(ability, 1);
+		}
+		
+		// write new super to super table
+		long id = db.insert(GameVars.TABLE_SUPERS, null, cv);
+		
+		// return table row id
+		return id;
+	}
+
+	private boolean checkDuplicates(String[] abilities, int index) {
+		String value = abilities[index];
+		if (value != null && !value.equals("")) {
+			for (int i = 0; i < index; i++) {
+				if (value.equals(abilities[i])) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

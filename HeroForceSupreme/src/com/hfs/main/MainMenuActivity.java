@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.hfs.constants.GameVars;
+import com.hfs.database.DBHelper;
 import com.hfs.utils.NameGen;
 
 public class MainMenuActivity extends Activity {
@@ -31,8 +32,9 @@ public class MainMenuActivity extends Activity {
 	
 	// processing variables
 	private NameGen ng = null;
+	private DBHelper db = null;
 	private String character = "";
-	private boolean type;
+	private int type = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class MainMenuActivity extends Activity {
 	    // initialize vibration
 	    vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 	    ng = new NameGen();
+	    db = new DBHelper(this);
 		
 	    // activate the main menu layout
 		setContentView(R.layout.activity_main_menu);
@@ -97,10 +100,15 @@ public class MainMenuActivity extends Activity {
 		// TODO - implement check for existing game
 		// if game exists, load existing game (separate activity)
 		
-		// if no game exists, continue on through viewflipper options to create a new game
-		flipper.setInAnimation(this, R.anim.in_from_right);
-		flipper.setOutAnimation(this, R.anim.out_to_left);
-		flipper.showNext();
+		if (db.tableIsEmpty(GameVars.TABLE_MANAGER)) {
+			// if no game exists, continue on through viewflipper options to create a new game
+			flipper.setInAnimation(this, R.anim.in_from_right);
+			flipper.setOutAnimation(this, R.anim.out_to_left);
+			flipper.showNext();
+		} else {
+			// if game exists, load game data and start the main game activity
+			// TODO - implement main game activity
+		}
 	}
 	
 	// if the user presses the Heroes button
@@ -132,7 +140,7 @@ public class MainMenuActivity extends Activity {
 		villainBtn.setImageResource(R.drawable.villains_btn_pressed);
 		
 		// Villain game type selected
-		this.type = GameVars.VILLAIN;
+		type = GameVars.VILLAIN;
 		// this.character = ng.generateName(this.type); 
 		// playerName.setText(this.character);
 		
